@@ -8,8 +8,6 @@
             [reagent-dnd.core :as dnd]
             [reagent.ratom]
             [markdown.core :refer [md->html]]
-            [cljsjs.highlight]
-            [cljsjs.highlight.langs.clojure]
             [medley.core :refer [map-vals]]
             [examples.utils :refer [make-title make-url document card]]))
 

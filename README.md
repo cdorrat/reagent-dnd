@@ -1,23 +1,22 @@
 # reagent-dnd
 
-A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
+A clojurescript reagent wrapper for react-dnd
 
 ## Development Mode
 
 ### Run application:
 
 ```
-lein clean
-lein figwheel dev
+npm install
+npm run watch
 ```
 
-Figwheel will automatically push cljs changes to the browser.
+Shadow-CLJS will automatically push cljs changes to the browser.
 
-Wait a bit, then browse to [http://localhost:3449](http://localhost:3449).
+Wait a bit, then browse to [http://localhost:8700](http://localhost:8700).
 
 ## Production Build
 
 ```
-lein clean
-lein cljsbuild once min
+???
 ```

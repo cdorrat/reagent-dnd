@@ -78,4 +78,4 @@
                                           (monitor/props->cljscon)
                                           (aget "connect-drop-target"))]
               (connect-drop-target
-               (r/as-element child))))}))))]))
+               (r/as-element [:div child]))))}))))]))

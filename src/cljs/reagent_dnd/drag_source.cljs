@@ -4,7 +4,8 @@
             [reagent-dnd.validate :refer [string-or-hiccup?]]
             [reagent-dnd.util :as util]
             [reagent-dnd.monitor :as monitor]
-            [reagent-dnd.connect :as connect])
+            [reagent-dnd.connect :as connect]
+            ["react-dom" :refer [findDOMNode]])
   (:require-macros [reagent-dnd.validate :refer [validate-args-macro]]))
 
 (def args-desc
@@ -100,8 +101,8 @@ itself"}])
                         (aget "connect-drag-preview"))]
               (when drag-preview
                 (if (fn? drag-preview)
-                  (f (drag-preview))
-                  (f drag-preview)))))
+                  (f [:div (drag-preview)])
+                  (f [:div drag-preview])))))
           :component-will-update
           (fn [this [_ next-props]]
             (reset! state (monitor/props->cljsmon next-props)))
@@ -112,4 +113,4 @@ itself"}])
                                           (monitor/props->cljscon)
                                           (aget "connect-drag-source"))]
               (connect-drag-source
-               (r/as-element child))))}))))]))
+               (r/as-element [:div child]))))}))))]))

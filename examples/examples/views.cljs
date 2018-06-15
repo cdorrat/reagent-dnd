@@ -101,7 +101,8 @@ use it with Reagent.
      (dc/mkdn-pprint-source square)
      (dc/mkdn-pprint-source droppable)
      [draggable drag-state]
-     [droppable drop-state])))
+     [droppable drop-state]
+     )))
 
 
 (defn about []
