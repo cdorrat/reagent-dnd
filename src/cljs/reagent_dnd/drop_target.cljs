@@ -31,13 +31,18 @@
     :type "-> any"
     :validate-fn fn?
     :description "function that is called whenever an item is hovered"}
+   {:name :begin-drag
+    :required false
+    :type "-> any"
+    :validate-fn fn?
+    :description "function that is called whenever a drag is started, return value is available as (:item monitor)"}
    {:name :can-drop?
     :required false
     :type "(dragged-item) -> boolean"
     :validate-fn fn?
     :description "function that indicates whether the item can be accepted by this drop zone"}])
 
-(defn options [{:keys [drop can-drop?]
+(defn options [{:keys [drop can-drop? hover]
                             :or {drop (constantly nil)}}]
   (let [options #js{}]
     (aset options "drop" (fn [props monitor]
@@ -48,6 +53,10 @@
     (when can-drop?
       (aset options "canDrop" (fn [props monitor]
                                 (can-drop? (monitor/monitor->cljsmon monitor)))))
+
+    (when hover
+      (aset options "hover" (fn [props monitor component]
+                              (hover (monitor/monitor->cljsmon monitor) component))))
     options))
 
 (defn make-types [types]
@@ -58,7 +67,7 @@
 
 (defn component
   [& {:as args
-      :keys [child types drop state can-drop?]}]
+      :keys [child types drop hover state can-drop?]}]
   {:pre [(validate-args-macro args-desc args "drop-target")]}
   (let [wrapper (react-dnd/drop-target
                  (make-types types)

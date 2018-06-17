@@ -13,7 +13,8 @@
             [examples.views.drag-around-naive]
             [examples.views.drag-around-custom]
             [examples.views.nested-drag-sources]
-            [examples.views.nested-drop-targets]))
+            [examples.views.nested-drop-targets]
+            [examples.views.simple-sortable]))
 
 (defn link [page url]
   [:a {:href url} page])
@@ -131,7 +132,9 @@ use it with Reagent.
                  :custom [examples.views.drag-around-custom/view])
    :nested (array-map
             :drag-sources [examples.views.nested-drag-sources/view]
-            :drop-targets [examples.views.nested-drop-targets/view])))
+            :drop-targets [examples.views.nested-drop-targets/view])
+   :sorted (array-map :simple-sorted [examples.views.simple-sortable/view])
+   ))
 
 (defn examples-sidebar []
   [:div

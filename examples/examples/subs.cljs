@@ -83,3 +83,8 @@
          root          (:root drag-sources)
          expanded-root (expand-tree drag-sources root)]
      (reaction expanded-root))))
+
+(register-sub
+ :simple-sorted-data
+ (fn [db _]
+   (reaction (-> @db :examples :simple-sortable-cards))))

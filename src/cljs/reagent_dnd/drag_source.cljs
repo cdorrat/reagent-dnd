@@ -74,7 +74,7 @@ itself"}])
     (when dragging?
       (aset options "isDragging" (fn [props monitor]
                                    (dragging?
-                                    (monitor/monitor->cljsmon monitor)))))
+                                    (monitor/monitor->cljsmon monitor :except [:dragging?])))))
     options))
 
 (defn component
@@ -105,7 +105,7 @@ itself"}])
                   (f [:div drag-preview])))))
           :component-will-update
           (fn [this [_ next-props]]
-            (reset! state (monitor/props->cljsmon next-props)))
+            (swap!  state merge (monitor/props->cljsmon next-props)))
           :render
           (fn [this]
             (let [connect-drag-source (-> (r/current-component)
