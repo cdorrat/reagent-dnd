@@ -3,3 +3,6 @@
 /*-init.clj
 /resources/public/js/compiled
 pom.xml
+/.nrepl-port
+/.shadow-cljs/
+/node_modules
