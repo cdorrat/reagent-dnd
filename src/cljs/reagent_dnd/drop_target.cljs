@@ -26,11 +26,21 @@
     :type "-> serializable"
     :validate-fn fn?
     :description "function that returns the 'drop result'"}
+   {:name :raw-drop
+    :required false
+    :type "-> any"
+    :validate-fn fn?
+    :description "function that returns the 'drop result', is passed raw props & js monitor object & result is not serialized. If specified will be used in preference to :drop "}
    {:name :hover
     :required false
     :type "-> any"
     :validate-fn fn?
     :description "function that is called whenever an item is hovered"}
+   {:name :raw-hover
+    :required false
+    :type "-> any"
+    :validate-fn fn?
+    :description "function that matches the react-dnd method and is called whenever an item is hovered, is passed (props, monitor, component). If specified will be used in preference to :drop "}
    {:name :begin-drag
     :required false
     :type "-> any"
@@ -42,21 +52,24 @@
     :validate-fn fn?
     :description "function that indicates whether the item can be accepted by this drop zone"}])
 
-(defn options [{:keys [drop can-drop? hover]
-                            :or {drop (constantly nil)}}]
+(defn options [{:keys [drop raw-drop can-drop? raw-hover hover]
+                :or {drop (constantly nil)}}]
   (let [options #js{}]
-    (aset options "drop" (fn [props monitor]
-                           (let [result (drop (monitor/monitor->cljsmon monitor))]
-                             (assert (util/serializable? result)
-                                     (str "Not Serializable: " (pr-str result)))
-                             (util/serialize result))))
+    (aset options "drop" (or raw-drop
+                             (fn [props monitor]
+                               (let [result (drop (monitor/monitor->cljsmon monitor))]
+                                 (.log js/console {:props props :monitor monitor})
+                                 (assert (util/serializable? result)
+                                         (str "Not Serializable: " (pr-str result)))
+                                 (util/serialize result)))))
     (when can-drop?
       (aset options "canDrop" (fn [props monitor]
                                 (can-drop? (monitor/monitor->cljsmon monitor)))))
 
-    (when hover
-      (aset options "hover" (fn [props monitor component]
-                              (hover (monitor/monitor->cljsmon monitor) component))))
+    (when (or raw-hover hover)
+      (aset options "hover" (or raw-hover
+                             (fn [props monitor component]
+                               (hover (monitor/monitor->cljsmon monitor) component)))))
     options))
 
 (defn make-types [types]
@@ -67,7 +80,7 @@
 
 (defn component
   [& {:as args
-      :keys [child types drop hover state can-drop?]}]
+      :keys [child types raw-drop drop raw-hover hover state can-drop?]}]
   {:pre [(validate-args-macro args-desc args "drop-target")]}
   (let [wrapper (react-dnd/drop-target
                  (make-types types)
