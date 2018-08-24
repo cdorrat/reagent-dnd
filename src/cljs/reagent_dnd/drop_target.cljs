@@ -13,6 +13,10 @@
     :type "string | hiccup"
     :validate-fn string-or-hiccup?
     :description "the thing to drop onto"}
+   {:name :class-name
+    :required false
+    :type "string"
+    :description "An optional class name to add to the drop target div wrapper"}
    {:name :state
     :required true
     :type "atom | ratom"
@@ -80,7 +84,7 @@
 
 (defn component
   [& {:as args
-      :keys [child types raw-drop drop raw-hover hover state can-drop?]}]
+      :keys [child types raw-drop drop raw-hover hover state can-drop? class-name]}]
   {:pre [(validate-args-macro args-desc args "drop-target")]}
   (let [wrapper (react-dnd/drop-target
                  (make-types types)
@@ -100,4 +104,6 @@
                                           (monitor/props->cljscon)
                                           (aget "connect-drop-target"))]
               (connect-drop-target
-               (r/as-element [:div child]))))}))))]))
+               (r/as-element [:div (merge {} (when class-name
+                                               {:class class-name}))
+                              child]))))}))))]))
